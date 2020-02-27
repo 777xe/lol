@@ -17,7 +17,7 @@ const requestRiotSignup = async (token, username, password, email, region) => {
   const headers = { 'Content-Type': 'application/json' };
   const apiUrl = 'https://signup-api.leagueoflegends.com/v1/accounts';
   const jsonData = JSON.stringify(requestBody);
-  const response = await axios.post(apiUrl, jsonData, { headers });
+  const response = await axios.post(apiUrl, jsonData, { headers }).catch(console.log);
   return response.statusText;
 };
 
