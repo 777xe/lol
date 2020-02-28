@@ -19,8 +19,8 @@ $ make start
 1. ![step1](https://i.ibb.co/SwfjmKG/step1ubuntu.jpg) It will ask you to reboot PC, do it.
 2. Install Ubuntu from Microsoft Store, launch it, wait a little bit and create user.
 3. For not wasting your time on setup git, download repository manually (Download ZIP).
-4. ![step4](https://i.ibb.co/MVTWwmD/image.png)
-Open Linux shell from the League-of-Legends-Accounts-Creator folder by **holding** Shift.
+4. Open Linux shell from the League-of-Legends-Accounts-Creator folder by **holding** Shift.
+![step4](https://i.ibb.co/MVTWwmD/image.png)
 5. Type this one by one:
 ```
 $ sudo apt update
