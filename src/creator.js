@@ -9,7 +9,7 @@ import saveAcc from './write';
 const genAccount = () => {
   const username = generateNick();
   const password = generatePassword(10, false, /[0-9a-zA-Z]/);
-  const email = `${username}_lol@gmail.com`; // email mask
+  const email = `${username}@gmail.com`; // email mask
   return { username, password, email };
 };
 
