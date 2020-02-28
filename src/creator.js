@@ -46,8 +46,12 @@ const mainThread = async () => {
   console.log(`Generated Account: ${accountInfo}`);
   const token = await decodingCaptha(googlekey, apiKey, url);
   const res = await requestRiotSignup(token, username, password, email, region);
-  if (res === 'OK') saveAcc(accountInfo);
-  console.log('Account Created! Check generatedAccounts.txt');
+  if (res.ok) {
+    saveAcc(accountInfo);
+    console.log('Account Created! Check generatedAccounts.txt');
+  } else {
+    console.log('Something went wrong!');
+  }
 };
 
 // try {

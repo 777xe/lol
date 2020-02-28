@@ -1,4 +1,4 @@
-import axios from 'axios';
+import fetch from 'node-fetch';
 
 const requestRiotSignup = async (token, username, password, email, region) => {
   const requestBody = {
@@ -14,11 +14,15 @@ const requestRiotSignup = async (token, username, password, email, region) => {
     locale: 'en',
     token: `Captcha ${token}`,
   };
-  const headers = { 'Content-Type': 'application/json' };
+
   const apiUrl = 'https://signup-api.leagueoflegends.com/v1/accounts';
-  const jsonData = JSON.stringify(requestBody);
-  const response = await axios.post(apiUrl, jsonData, { headers }).catch(console.log);
-  return response.statusText;
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    body: JSON.stringify(requestBody),
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  return response;
 };
 
 export default requestRiotSignup;
