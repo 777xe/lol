@@ -9,7 +9,7 @@ import saveAcc from './write';
 const genAccount = () => {
   const username = generateNick();
   const password = generatePassword(10, false, /[0-9a-zA-Z]/);
-  const email = `${username}@gmail.com`;
+  const email = `${username}_lol@gmail.com`; // email mask
   return { username, password, email };
 };
 
@@ -22,8 +22,8 @@ const getKeys = () => {
   return { googlekey, apiKey };
 };
 
-const getServerNumber = () => {
-  console.log('Select Server from one of the following:\n');
+const getServerAndAmount = () => {
+  console.log('Select Server:');
   console.log('[1] EUW');
   console.log('[2] EUN');
   console.log('[3] NA');
@@ -34,21 +34,54 @@ const getServerNumber = () => {
   console.log('[8] LAN');
   console.log('[9] LAS');
   const serverNumber = readlineSync.question('Enter the number: ');
-  return serverNumber;
+  const amount = readlineSync.question(
+    'How many accounts you want to generate: ',
+  );
+  return { serverNumber, amount };
+};
+
+const registerAccount = async (googlekey, apiKey, url, region) => {
+  const { username, password, email } = genAccount();
+  const response = await decodingCaptha(googlekey, apiKey, url);
+  if (!response) return null;
+  const token = response.text;
+  const res = await requestRiotSignup(token, username, password, email, region);
+  if (res.ok) {
+    return `${region}:${username}:${password}:${email}`;
+  }
+  return null;
 };
 
 const mainThread = async () => {
-  const { username, password, email } = genAccount();
+  console.log(`
+Version 1.0.1 - League of Legends Accounts Creator
+                             Discord: megaded#1529
+                                        by MegaDed
+`);
   const { googlekey, apiKey } = getKeys();
-  const serverNumber = getServerNumber();
+  const { serverNumber, amount } = getServerAndAmount();
   const { url, region } = getLink(serverNumber);
-  const accountInfo = `${region}:${username}:${password}:${email}`;
-  console.log(`Generated Account: ${accountInfo}`);
-  const token = await decodingCaptha(googlekey, apiKey, url);
-  const res = await requestRiotSignup(token, username, password, email, region);
-  if (res.ok) {
-    saveAcc(accountInfo);
-    console.log('Account Created! Check generatedAccounts.txt');
+  const promises = [];
+  for (let i = 0; i < Number(amount); i += 1) {
+    promises.push(registerAccount(googlekey, apiKey, url, region));
+  }
+  console.log('waiting for captchas... 200 seconds limit');
+  let timer = 200;
+  const intervalId = setInterval(() => {
+    timer -= 5;
+    console.log(`waiting for captchas... ${timer} secs left`);
+  }, 5000);
+  const [...users] = await Promise.all(promises);
+  clearInterval(intervalId);
+  const registeredUsers = users.filter(Boolean);
+  if (registeredUsers.length > 0) {
+    console.log(
+      `Successfully registered [${registeredUsers.length}/${amount}]`,
+    );
+    const registeredPlain = registeredUsers.join('\n');
+    console.log(registeredPlain);
+    console.log('Saving accs to generatedAccounts.txt');
+    saveAcc(registeredPlain);
   } else {
     console.log('Something went wrong!');
   }

@@ -8,7 +8,6 @@
   ],
   "dependencies": {
     "@infosimples/node_two_captcha": "^1.0.2",
-    "axios": "^0.19.2",
     "node-fetch": "^2.6.0",
     "password-generator": "^2.2.3",
     "readline-sync": "^1.4.10"
